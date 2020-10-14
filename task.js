@@ -11,6 +11,8 @@ const refs = {
   galleryImage: document.querySelectorAll('.gallery__image'),
 };
 
+// Создание разметки
+
 const markup = images.map(({ preview, original, description }, index) => {
   return `<li class="gallery__item">
     <a 
@@ -30,49 +32,51 @@ const markup = images.map(({ preview, original, description }, index) => {
 
 refs.gallery.insertAdjacentHTML('beforeend', markup.join(''));
 
-const onEscKeyPress = function(evt) {
+// Функция при нажатии на ESC
+
+const onEscKeyPress = function (evt) {
   if (evt.code === 'Escape') {
     closeModalWindow();
-  };
+  }
 };
 
-let imageIndex = 0;
+// Функция при нажатии на ArrowRight и ArrowLeft
 
 const onKeyboardEvent = function (evt) {
-  const imageRef = refs.modalImage.src;
-  
-  if (evt.code === 'ArrowRight') {
-    images.forEach(({ original }, index, arr) => {
-      if (original === imageRef) {
-        imageIndex = index + 1;
-        console.log(imageIndex);
+  const index = images.indexOf(
+    images.find(images => images.original === refs.modalImage.src),
+  );
 
-        refs.modalImage.src = arr[imageIndex].original;
-        refs.modalImage.alt = arr[imageIndex].description;
-      }
-    });
+  if (evt.code === 'ArrowRight') {
+    const within = index + 1 <= images.length - 1;
+
+    if (within) {
+      refs.modalImage.src = images[index + 1].original;
+      refs.modalImage.alt = images[index + 1].description;
+    }
   }
 
-  // if (evt.code === 'ArrowLeft') {
+  if (evt.code === 'ArrowLeft') {
+    const within = index - 1 >= 0;
 
-  //   refs.modalImage.src = '';
-  //   refs.modalImage.alt = '';
-  // }
-
-  
-
-  
-
-  console.log(evt.code);
+    if (within) {
+      refs.modalImage.src = images[index - 1].original;
+      refs.modalImage.alt = images[index - 1].description;
+    }
+  }
 };
+
+// Функция закрытия модального окна
 
 const closeModalWindow = function () {
   refs.modalImage.src = '';
   refs.lightbox.classList.remove('is-open');
-  
+
   console.log('Удаляю обработчик на ESC');
-  console.log('Удаляю обработчик на ArrowRight ArrowLeft');
+  console.log('Удаляю обработчик на ArrowRight и ArrowLeft');
 };
+
+// Функция открытия модального окна
 
 const openImageModalWindow = function (evt) {
   refs.lightbox.classList.add('is-open');
@@ -89,11 +93,10 @@ const openImageModalWindow = function (evt) {
   console.log('Добавляю обработчик на ESC');
   window.addEventListener('keydown', onEscKeyPress, { once: true });
 
-  console.log('Добавляю обработчик на ArrowRight ArrowLeft');
+  console.log('Добавляю обработчик на ArrowRight и ArrowLeft');
   window.addEventListener('keydown', onKeyboardEvent);
 };
 
+// Слушатель события при нажатии на картинку из галереи
+
 refs.gallery.addEventListener('click', openImageModalWindow);
-
-
-// console.log(refs.galleryImage);

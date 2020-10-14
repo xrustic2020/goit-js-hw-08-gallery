@@ -17,7 +17,7 @@ const markup = images.map(({ preview, original, description }, index) => {
   return `<li class="gallery__item">
     <a 
       class="gallery__link"
-      href="#"
+      href="${original}"
     >
       <img
         class="gallery__image"
@@ -79,6 +79,8 @@ const closeModalWindow = function () {
 // Функция открытия модального окна
 
 const openImageModalWindow = function (evt) {
+  evt.preventDefault();
+  
   refs.lightbox.classList.add('is-open');
 
   refs.modalImage.src = evt.target.dataset.source;

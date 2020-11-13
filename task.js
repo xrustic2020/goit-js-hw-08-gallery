@@ -1,14 +1,14 @@
-import images from './gallery-items.js';
+import images from "./gallery-items.js";
 
 const refs = {
-  gallery: document.querySelector('.js-gallery'),
-  lightbox: document.querySelector('div.lightbox'),
-  modalImage: document.querySelector('.lightbox__image'),
+  gallery: document.querySelector(".js-gallery"),
+  lightbox: document.querySelector("div.lightbox"),
+  modalImage: document.querySelector(".lightbox__image"),
   buttonCloseModal: document.querySelector(
-    'button[data-action="close-lightbox"]',
+    'button[data-action="close-lightbox"]'
   ),
-  overlay: document.querySelector('.lightbox__overlay'),
-  galleryImage: document.querySelectorAll('.gallery__image'),
+  overlay: document.querySelector(".lightbox__overlay"),
+  galleryImage: document.querySelectorAll(".gallery__image"),
 };
 
 // Создание разметки
@@ -30,12 +30,12 @@ const markup = images.map(({ preview, original, description }, index) => {
   </li>`;
 });
 
-refs.gallery.insertAdjacentHTML('beforeend', markup.join(''));
+refs.gallery.insertAdjacentHTML("beforeend", markup.join(""));
 
 // Функция при нажатии на ESC
 
 const onEscKeyPress = function (evt) {
-  if (evt.code === 'Escape') {
+  if (evt.code === "Escape") {
     closeModalWindow();
   }
 };
@@ -44,10 +44,10 @@ const onEscKeyPress = function (evt) {
 
 const onKeyboardEvent = function (evt) {
   const index = images.indexOf(
-    images.find(images => images.original === refs.modalImage.src),
+    images.find((images) => images.original === refs.modalImage.src)
   );
 
-  if (evt.code === 'ArrowRight') {
+  if (evt.code === "ArrowRight") {
     const within = index + 1 <= images.length - 1;
 
     if (within) {
@@ -56,7 +56,7 @@ const onKeyboardEvent = function (evt) {
     }
   }
 
-  if (evt.code === 'ArrowLeft') {
+  if (evt.code === "ArrowLeft") {
     const within = index - 1 >= 0;
 
     if (within) {
@@ -69,36 +69,33 @@ const onKeyboardEvent = function (evt) {
 // Функция закрытия модального окна
 
 const closeModalWindow = function () {
-  refs.modalImage.src = '';
-  refs.lightbox.classList.remove('is-open');
+  refs.modalImage.src = "";
+  refs.lightbox.classList.remove("is-open");
 
-  console.log('Удаляю обработчик на ESC');
-  console.log('Удаляю обработчик на ArrowRight и ArrowLeft');
+  window.removeEventListener("keydown", onEscKeyPress);
+  window.removeEventListener("keydown", onKeyboardEvent);
 };
 
 // Функция открытия модального окна
 
 const openImageModalWindow = function (evt) {
   evt.preventDefault();
-  
-  refs.lightbox.classList.add('is-open');
+
+  refs.lightbox.classList.add("is-open");
 
   refs.modalImage.src = evt.target.dataset.source;
   refs.modalImage.alt = evt.target.alt;
 
-  refs.buttonCloseModal.addEventListener('click', closeModalWindow, {
+  refs.buttonCloseModal.addEventListener("click", closeModalWindow, {
     once: true,
   });
 
-  refs.overlay.addEventListener('click', closeModalWindow, { once: true });
+  refs.overlay.addEventListener("click", closeModalWindow, { once: true });
 
-  console.log('Добавляю обработчик на ESC');
-  window.addEventListener('keydown', onEscKeyPress, { once: true });
-
-  console.log('Добавляю обработчик на ArrowRight и ArrowLeft');
-  window.addEventListener('keydown', onKeyboardEvent);
+  window.addEventListener("keydown", onEscKeyPress);
+  window.addEventListener("keydown", onKeyboardEvent);
 };
 
 // Слушатель события при нажатии на картинку из галереи
 
-refs.gallery.addEventListener('click', openImageModalWindow);
+refs.gallery.addEventListener("click", openImageModalWindow);
